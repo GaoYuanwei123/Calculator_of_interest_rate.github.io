@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>等额本息利率计算器</title>
+<meta name="description" content="输入贷款本金、月还款额、还款月数和尾款，反推年化利率并生成摊销时间表。">
+<meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f5f7fb" media="(prefers-color-scheme: light)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="利率计算器">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png" sizes="192x192">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="hero">
+  <h1>等额本息利率计算器</h1>
+  <p class="sub">已知本金、月供、期数和尾款 &rarr; 反推真实年化利率 + 摊销时间表</p>
+</header>
+
+<main>
+  <!-- ========== 输入 ========== -->
+  <section class="card">
+    <div class="field">
+      <label for="principal">贷款本金（元）</label>
+      <input id="principal" type="text" inputmode="decimal" autocomplete="off"
+             placeholder="例如 100000" enterkeyhint="next">
+    </div>
+    <div class="field">
+      <label for="payment">月还款额（元）</label>
+      <input id="payment" type="text" inputmode="decimal" autocomplete="off"
+             placeholder="例如 8884.88" enterkeyhint="next">
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label for="months">还款月数（期）</label>
+        <input id="months" type="text" inputmode="numeric" autocomplete="off"
+               placeholder="例如 12" enterkeyhint="next">
+      </div>
+      <div class="field">
+        <label for="balloon">尾款（元）</label>
+        <input id="balloon" type="text" inputmode="decimal" autocomplete="off"
+               placeholder="没有就留空" enterkeyhint="done">
+      </div>
+    </div>
+
+    <p class="error" id="error" role="alert" hidden></p>
+
+    <div class="actions">
+      <button id="calc" class="btn primary" type="button">计算</button>
+      <button id="demo" class="btn ghost" type="button">填入示例</button>
+      <button id="reset" class="btn ghost" type="button">清空</button>
+    </div>
+  </section>
+
+  <!-- ========== 结果 ========== -->
+  <section class="card result" id="resultCard" hidden>
+    <p class="eyebrow">年化利率（单利 = 月利率 × 12）</p>
+    <p class="big" id="annual">—</p>
+    <p class="big-sub">月利率 <span id="monthly">—</span> ｜ 复利年化 <span id="annualEffective">—</span></p>
+
+    <dl class="stats">
+      <div><dt>总利息</dt><dd id="totalInterest">—</dd></div>
+      <div><dt>总还款</dt><dd id="totalPayment">—</dd></div>
+      <div><dt>期数（月）</dt><dd id="periods">—</dd></div>
+      <div><dt>尾款</dt><dd id="balloonOut">—</dd></div>
+    </dl>
+    <p class="note" id="note" hidden></p>
+  </section>
+
+  <!-- ========== 摊销表 ========== -->
+  <section class="card table-card" id="tableCard" hidden>
+    <div class="card-head">
+      <h2>摊销时间表</h2>
+      <button id="csv" class="btn small ghost" type="button">导出 CSV</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>期数</th>
+            <th>月供</th>
+            <th>利息</th>
+            <th>本金</th>
+            <th>余额</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>算法与原始 C 程序一致：二分法求解满足「各期还款现值 + 尾款现值 = 本金」的月利率。</p>
+  <p class="dim">结果仅供参考，实际以贷款合同为准。</p>
+</footer>
+
+<script src="loan-core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
